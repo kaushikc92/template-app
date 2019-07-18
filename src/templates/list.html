@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <script   src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+  {% load static %}
+  <title>Template Application</title>
+</head>
+
+<body>
+  <div id="file-list">
+  </div>
+  <script>
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
+
+    $.post('https://authentication.columbusecosystem.com/o/token/', 
+      {
+        grant_type: 'authorization_code', 
+        code: getUrlVars()["code"], 
+        redirect_uri: 'http://0.0.0.0/list', 
+        client_id: 'AQt4NbpdqcNf81j5qMc7YuV0f8F4gQsqMahrxjkf', 
+        client_secret: 'Qouy1KSpyuazt8SjETDVuSFTCiCxC4rPjIg29La8Np5i7XZyQLQLDMsi04mfZHbNF9TqXpMXy0PaL9uiKDQ7qXmPwqHxYsEz2xvH3KmdcfoQAOw6u1g4dmAualHtk68R'
+      }, function(response){
+        //alert(response.access_token);
+        $.ajax({
+          type: 'GET',
+          url: 'https://api.cdrive.columbusecosystem.com/list/',
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader ("Authorization", "Bearer " + response.access_token);
+          }
+        });
+      }
+    );
+ 
+  </script>
+
+</body>
+
+</html>
